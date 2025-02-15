@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <style>
+        body {
+            background-color: #484D6D;
+            color: #FFFFFF;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-size: 50px;
+            background-color: #4B8F8C;
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            color: white;
+        }
+
+        h8 {
+            font-size: 20px;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .cell {
+            background-color: #4B8F8C;
+            color: white;
+            font-size: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+
+        .cell:hover {
+            background-color: #6BAFAD;
+        }
+
+        .winner {
+            margin-top: 20px;
+            font-size: 30px;
+            color: #FFD700;
+        }
+
+        button {
+            background-color: #4B8F8C;
+            color: white;
+            padding: 10px 20px;
+            font-size: 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #6BAFAD;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tic Tac Toe</h1>
+    <h8>By Himaaksh</h8>
+    <div class="board" id="board">
+        <div class="cell" data-index="0"></div>
+        <div class="cell" data-index="1"></div>
+        <div class="cell" data-index="2"></div>
+        <div class="cell" data-index="3"></div>
+        <div class="cell" data-index="4"></div>
+        <div class="cell" data-index="5"></div>
+        <div class="cell" data-index="6"></div>
+        <div class="cell" data-index="7"></div>
+        <div class="cell" data-index="8"></div>
+    </div>
+    <div class="winner" id="winner"></div>
+    <button onclick="resetGame()">Restart Game</button>
+    
+    <script>
+        const board = document.getElementById('board');
+        const winnerText = document.getElementById('winner');
+        let currentPlayer = 'X';
+        let boardState = Array(9).fill(null);
+        const winningCombinations = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+
+        board.addEventListener('click', (e) => {
+            const index = e.target.getAttribute('data-index');
+            if (index !== null && boardState[index] === null) {
+                boardState[index] = currentPlayer;
+                e.target.innerText = currentPlayer;
+                if (checkWinner()) {
+                    winnerText.innerText = currentPlayer + ' Wins!';
+                    board.style.pointerEvents = 'none';
+                } else if (boardState.every(cell => cell !== null)) {
+                    winnerText.innerText = 'It\'s a Draw!';
+                }
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            }
+        });
+
+        function checkWinner() {
+            return winningCombinations.some(combination => {
+                const [a, b, c] = combination;
+                return boardState[a] && boardState[a] === boardState[b] && boardState[a] === boardState[c];
+            });
+        }
+
+        function resetGame() {
+            boardState.fill(null);
+            document.querySelectorAll('.cell').forEach(cell => cell.innerText = '');
+            currentPlayer = 'X';
+            winnerText.innerText = '';
+            board.style.pointerEvents = 'auto';
+        }
+    </script>
+</body>
+</html>
